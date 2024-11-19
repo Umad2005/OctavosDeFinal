@@ -1,0 +1,62 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class RadixSortOctal {
+
+    // Función principal de ordenamiento por RadixSort
+    public static void radixSort(int[] arr) {
+        // Encuentra el número máximo para determinar el número de dígitos
+        int max = Arrays.stream(arr).max().getAsInt();
+        
+        // Realiza el ordenamiento para cada dígito (de menor a mayor)
+        for (int exp = 1; max / exp > 0; exp *= 8) {
+            countSort(arr, exp);
+        }
+    }
+
+    // Función auxiliar para hacer el ordenamiento por un dígito
+    private static void countSort(int[] arr, int exp) {
+        // Crear un contenedor para contar las ocurrencias de los dígitos
+        ArrayList<Integer>[] count = new ArrayList[8];
+        for (int i = 0; i < 8; i++) {
+            count[i] = new ArrayList<>();
+        }
+
+        // Distribuir los números en los "contenedores" según el valor del dígito actual
+        for (int i = 0; i < arr.length; i++) {
+            int digit = (arr[i] / exp) % 8; // Extrae el dígito en base octal
+            count[digit].add(arr[i]);
+        }
+
+        // Volver a colocar los números en el arreglo original desde los contenedores
+        int index = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int num : count[i]) {
+                arr[index++] = num;
+            }
+        }
+    }
+
+    // Función para mostrar el arreglo
+    public static void printArray(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            // Imprime el número en formato octal
+            System.out.print(Integer.toOctalString(arr[i]) + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        // Un arreglo de números en formato octal
+        int[] arr = {017, 026, 015, 010, 031, 004, 013, 020};
+        
+        System.out.println("Arreglo original en octal:");
+        printArray(arr);
+
+        // Realiza el ordenamiento por RadixSort
+        radixSort(arr);
+
+        System.out.println("Arreglo ordenado en octal:");
+        printArray(arr);
+    }
+}
